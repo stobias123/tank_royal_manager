@@ -1,0 +1,13 @@
+---
+$id: bot_state_with_id.yaml
+$schema: https://json-schema.org/draft/2020-12/schema
+title: BotStateWithID
+description: Current state of a bot, which included an id
+extends:
+  $ref: bot_state.yaml
+properties:
+  id:
+    description: ID of bot for the observer
+    type: integer
+required:
+  - id

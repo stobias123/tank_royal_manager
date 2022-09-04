@@ -1,0 +1,385 @@
+---
+$id: won_round_event.yaml #tick-event_for_observer.yaml
+$schema: https://json-schema.org/draft/2020-12/schema
+title: Fire
+description: |-
+  Event occurring when a bot has won the round
+properties:
+  host:
+    description: Host name or IP address
+    type: string
+  port:
+    description: Port number
+    type: integer
+  victimId:
+    description: ID of the bot that got hit
+    type: integer
+  name:
+    description: Name of server, e.g. John Doe's RoboRumble Server
+    type: string
+  version:
+    description: Game version, e.g. '1.0.0' using Semantic Versioning (https://semver.org/)
+    type: string
+  authors:
+    description: Name of authors, e.g. John Doe (john_doe@somewhere.net)
+    type: array
+    items:
+      type: string
+  description:
+    description: Short description of the bot, preferable a one-liner
+    type: string
+  homepage:
+    description: URL to a home page for the bot
+    type: string
+  countryCodes:
+    description: 2-letter country code(s) defined by ISO 3166-1, e.g. "UK"
+    type: array
+    items:
+      type: string
+      pattern: /^[a-z]{2}$/ig
+  gameTypes:
+    description: Game types running at this server, e.g. "melee" and "1v1"
+    type: array
+    items:
+      type: string
+    minItems: 1
+    uniqueItems: true
+  platform:
+    description: Platform used for running the bot, e.g. JVM 17 or .NET 5
+    type: string
+  programmingLang:
+    description: Language used for programming the bot, e.g. Java 17 or C# 10
+    type: string
+  initialPosition:
+    description: Initial start position of the bot used for debugging.
+    $ref: initial_position.yaml
+  secret:
+    description: Secret used for access control with the server
+    type: string
+  botId:
+    description: ID of the bot that hit another bot
+    type: integer
+  energy:
+    description: Energy level of the scanned bot
+    type: number
+  x:
+    description: X coordinate of the scanned bot
+    type: number
+  y:
+    description: Y coordinate of the scanned bot
+    type: number
+  rammed:
+    description: Flag specifying, if the victim bot got rammed
+    type: boolean
+  turnRate:
+    description: Turn rate of the body in degrees per turn (can be positive and negative)
+    type: number
+  gunTurnRate:
+    description: Turn rate of the gun in degrees per turn (can be positive and negative)
+    type: number
+  radarTurnRate:
+    description: Turn rate of the radar in degrees per turn (can be positive and negative)
+    type: number
+  targetSpeed:
+    description: New target speed in units per turn (can be positive and negative)
+    type: number
+  firepower:
+    description: Attempt to fire gun with the specified firepower
+    type: number
+    minimum: 0.0
+    maximum: 3.0
+    exclusiveMinimum: true
+  adjustGunForBodyTurn:
+    description: Flag indicating if the gun must be adjusted to compensate for the body turn. Default is false.
+    type: boolean
+  adjustRadarForBodyTurn:
+    description: Flag indicating if the radar must be adjusted to compensate for the body turn. Default is false.
+    type: boolean
+  adjustRadarForGunTurn:
+    description: Flag indicating if the radar must be adjusted to compensate for the gun turn. Default is false.
+    type: boolean
+  rescan:
+    description: Flag indicating if the bot should rescan with previous radar direction and scan sweep angle.
+    type: boolean
+  bodyColor:
+    description: Current RGB color of the body
+    $ref: color.yaml
+  turretColor:
+    description: New color of the gun turret
+    $ref: color.yaml
+  radarColor:
+    description: New color of the radar
+    $ref: color.yaml
+  bulletColor:
+    description: New color of the bullet. Note. This will be the color of a bullet when it is fired
+    $ref: color.yaml
+  scanColor:
+    description: New color of the scan arc
+    $ref: color.yaml
+  tracksColor:
+    description: New color of the tracks
+    $ref: color.yaml
+  gunColor:
+    description: New color of gun
+    $ref: color.yaml
+  bots:
+    description: List of bots
+    type: array
+    items:
+      description: Bot info
+      $ref: bot_info.yaml
+  rank:
+    description: Rank/placement of the bot, where 1 is 1st place, 4 is 4th place etc.
+    type: integer
+    minimum: 1
+  survival:
+    description: Survival score gained whenever another bot is defeated
+    type: integer
+  lastSurvivorBonus:
+    description: Last survivor score as last survivor in a round
+    type: integer
+  bulletDamage:
+    description: Bullet damage given
+    type: integer
+  bulletKillBonus:
+    description: Bullet kill bonus
+    type: integer
+  ramDamage:
+    description: Ram damage given
+    type: integer
+  ramKillBonus:
+    description: Ram kill bonus
+    type: integer
+  totalScore:
+    description: Total score
+    type: integer
+  firstPlaces:
+    description: Number of 1st places
+    type: integer
+  secondPlaces:
+    description: Number of 2nd places
+    type: integer
+  thirdPlaces:
+    description: Number of 3rd places
+    type: integer
+  id:
+    description: Identifier for the participant in a battle
+    type: integer
+  direction:
+    description: Direction in degrees of the scanned bot
+    type: number
+  gunDirection:
+    description: Gun direction in degrees
+    type: number
+  radarDirection:
+    description: Radar direction in degrees
+    type: number
+  radarSweep:
+    description: Radar sweep angle in degrees, i.e. angle between previous and current radar direction
+    type: number
+  speed:
+    description: Speed measured in units per turn of the scanned bot
+    type: number
+  gunHeat:
+    description: Gun heat
+    type: number
+  bullet:
+    description: Bullet that has hit the bot
+    $ref: bullet_state.yaml
+  damage:
+    description: Damage inflicted by the bullet
+    type: number
+  hitBullet:
+    description: The other bullet that was hit by the bullet
+    $ref: bullet_state.yaml
+  bulletId:
+    description: ID of the bullet
+    type: integer
+  ownerId:
+    description: ID of the bot that fired the bullet
+    type: integer
+  power:
+    description: Bullet firepower (between 0.1 and 3.0)
+    type: number
+  color:
+    description: Color of the bullet
+    $ref: color.yaml
+  tps:
+    description: Turns per second (TPS). Typically a value from 0 to 999. -1 means maximum possible TPS speed.
+    type: integer
+  author:
+    description: Author name, e.g. John Doe (john_doe@somewhere.net)
+    type: string
+  turnNumber:
+    description: The current turn number in the round when event occurred
+    type: integer
+  numberOfRounds:
+    description: Number of rounds in battle
+    type: integer
+  results:
+    description: Results of the battle
+    $ref: bot_results_for_bot.yaml
+    type: array
+    items:
+      $ref: bot_results_for_observer.yaml
+  gameType:
+    description: Type of game
+    type: string
+  arenaWidth:
+    description: Width of arena measured in units
+    type: integer
+  isArenaWidthLocked:
+    description: Flag specifying if the width of arena is fixed for this game type
+    type: boolean
+  arenaHeight:
+    description: Height of arena measured in units
+    type: integer
+  isArenaHeightLocked:
+    description: Flag specifying if the height of arena is fixed for this game type
+    type: boolean
+  minNumberOfParticipants:
+    description: Minimum number of bots participating in battle
+    type: integer
+  isMinNumberOfParticipantsLocked:
+    description: Flag specifying if the minimum number of bots participating in battle is fixed for this game type
+    type: boolean
+  maxNumberOfParticipants:
+    description: Maximum number of bots participating in battle
+    type: integer
+  isMaxNumberOfParticipantsLocked:
+    description: Flag specifying if the maximum number of bots participating in battle is fixed for this game type
+    type: boolean
+  isNumberOfRoundsLocked:
+    description: Flag specifying if the number-of-rounds is fixed for this game type
+    type: boolean
+  gunCoolingRate:
+    description: Gun cooling rate. The gun needs to cool down to a gun heat of zero before the gun is able to fire
+    type: number
+  isGunCoolingRateLocked:
+    description: Flag specifying if the gun cooling rate is fixed for this game type
+    type: boolean
+  maxInactivityTurns:
+    description: Maximum number of inactive turns allowed, where a bot does not take any action before it is zapped by the game
+    type: integer
+  isMaxInactivityTurnsLocked:
+    description: Flag specifying if the inactive turns is fixed for this game type
+    type: boolean
+  turnTimeout:
+    description: Turn timeout in microseconds (1 / 1,000,000 second) for sending intent after having received 'tick' message
+    type: integer
+  isTurnTimeoutLocked:
+    description: Flag specifying if the turn timeout is fixed for this game type
+    type: boolean
+  readyTimeout:
+    description: Time limit in microseconds (1 / 1,000,000 second) for sending ready message after having received 'game started' message
+    type: integer
+  isReadyTimeoutLocked:
+    description: Flag specifying if the ready timeout is fixed for this game type
+    type: boolean
+  defaultTurnsPerSecond:
+    description: Default number of turns to show per second for an observer/UI
+    type: integer
+  myId:
+    description: My ID is an unique identifier for this bot
+    type: integer
+  gameSetup:
+    description: Game setup
+    $ref: game_setup.yaml
+  participants:
+    description: List of bots participating in this battle
+    type: array
+    items:
+      $ref: participant.yaml
+  angle:
+    description: The angle. When it is not set, a random value will be used.
+    type: number
+  type:
+    enum:
+      - BotHandshake
+      - ControllerHandshake
+      - ObserverHandshake
+      - ServerHandshake
+      - BotReady
+      - BotIntent
+      - BotInfo
+      - BotListUpdate
+      - GameStartedEventForBot
+      - GameStartedEventForObserver
+      - GameEndedEventForBot
+      - GameEndedEventForObserver
+      - GameAbortedEvent
+      - GamePausedEventForObserver
+      - GameResumedEventForObserver
+      - RoundStartedEvent
+      - RoundEndedEvent
+      - ChangeTps
+      - TpsChangedEvent
+      - BotDeathEvent
+      - BotHitBotEvent
+      - BotHitWallEvent
+      - BulletFiredEvent
+      - BulletHitBotEvent
+      - BulletHitBulletEvent
+      - BulletHitWallEvent
+      - HitByBulletEvent
+      - ScannedBotEvent
+      - SkippedTurnEvent
+      - TickEventForBot
+      - TickEventForObserver
+      - WonRoundEvent
+      - StartGame
+      - StopGame
+      - PauseGame
+      - ResumeGame
+      - NextTurn
+  roundNumber:
+    description: The current round number in the battle when event occurred
+    type: integer
+  scannedByBotId:
+    description: ID of the bot did the scanning
+    type: integer
+  scannedBotId:
+    description: ID of the bot that was scanned
+    type: integer
+  variant:
+    type: string
+    description: Game variant, e.g. 'Tank Royale' for Robocode Tank Royale
+  botAddresses:
+    description: List of bot addresses
+    type: array
+    items:
+      description: Bot address
+      $ref: bot_address.yaml
+  enemyCount:
+    description: Number of enemies left in the current round
+    type: integer
+  botState:
+    description: Current state of this bot
+    $ref: bot_state.yaml
+  bulletStates:
+    description: Current state of all bullets
+    type: array
+    items:
+      $ref: bullet_state.yaml
+  events:
+    description: All events occurring at this tick
+    type: array
+    items:
+      $ref: event.yaml
+  botStates:
+    description: Current state of all bots
+    type: array
+    items:
+      $ref: bot_state_with_id.yaml
+required:
+  - roundNumber
+  - botStates
+  - bulletStates
+  - events
+extends:
+  $ref: event.yaml
+$schema": https://json-schema.org/draft/2020-12/schema
+type: object
+pattern: /^#[0-9A-F]{3,6}$/ig
+examples: ["#000", // black "#FFF", // white "#0F0", // lime "#000000", // black "#FFFFFF", // white "#00FF00", // lime "#FFA07A", // light salmon "#9932CC"  // dark orchid]
+id: game_started_event_for_observer.yaml

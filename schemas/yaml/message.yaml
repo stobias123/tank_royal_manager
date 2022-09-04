@@ -1,0 +1,53 @@
+---
+$id: message.yaml
+$schema: https://json-schema.org/draft/2020-12/schema
+title: Message
+description: Message exchanged between server and client
+properties:
+  type:
+    enum:
+      - BotHandshake
+      - ControllerHandshake
+      - ObserverHandshake
+      - ServerHandshake
+
+      - BotReady
+      - BotIntent
+      - BotInfo
+      - BotListUpdate
+
+      - GameStartedEventForBot
+      - GameStartedEventForObserver
+      - GameEndedEventForBot
+      - GameEndedEventForObserver
+      - GameAbortedEvent
+      - GamePausedEventForObserver
+      - GameResumedEventForObserver
+
+      - RoundStartedEvent
+      - RoundEndedEvent
+
+      - ChangeTps
+      - TpsChangedEvent
+
+      - BotDeathEvent
+      - BotHitBotEvent
+      - BotHitWallEvent
+      - BulletFiredEvent
+      - BulletHitBotEvent
+      - BulletHitBulletEvent
+      - BulletHitWallEvent
+      - HitByBulletEvent
+      - ScannedBotEvent
+      - SkippedTurnEvent
+      - TickEventForBot
+      - TickEventForObserver
+      - WonRoundEvent
+
+      - StartGame
+      - StopGame
+      - PauseGame
+      - ResumeGame
+      - NextTurn
+required:
+  - type

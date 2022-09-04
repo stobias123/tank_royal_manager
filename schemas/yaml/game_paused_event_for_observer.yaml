@@ -1,0 +1,8 @@
+---
+$id: game_paused_event_for_observer.yaml
+$schema: https://json-schema.org/draft/2020-12/schema
+title: GamePausedEventForObserver
+description: Event occurring when a game has been paused
+type: object
+extends:
+  $ref: message.yaml

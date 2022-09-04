@@ -1,0 +1,13 @@
+---
+$id: event.yaml
+$schema: https://json-schema.org/draft/2020-12/schema
+title: Event
+description: Event occurring during a battle
+extends:
+  $ref: message.yaml
+properties:
+  turnNumber:
+    description: The turn number in current round when event occurred
+    type: integer
+required:
+  - turnNumber

@@ -1,0 +1,8 @@
+---
+$id: resume_game.yaml
+$schema: https://json-schema.org/draft/2020-12/schema
+title: ResumeGame
+description: Command to resume a game
+type: object
+extends:
+  $ref: message.yaml

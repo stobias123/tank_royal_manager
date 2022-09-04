@@ -1,0 +1,37 @@
+---
+$id: scanned_bot_event.yaml
+$schema: https://json-schema.org/draft/2020-12/schema
+title: ScannedBotEvent
+description: Event occurring when a bot has scanned another bot
+extends:
+  $ref: event.yaml
+properties:
+  scannedByBotId:
+    description: ID of the bot did the scanning
+    type: integer
+  scannedBotId:
+    description: ID of the bot that was scanned
+    type: integer
+  energy:
+    description: Energy level of the scanned bot
+    type: number
+  x:
+    description: X coordinate of the scanned bot
+    type: number
+  y:
+    description: Y coordinate of the scanned bot
+    type: number
+  direction:
+    description: Direction in degrees of the scanned bot
+    type: number
+  speed:
+    description: Speed measured in units per turn of the scanned bot
+    type: number
+required:
+  - scannedByBotId
+  - scannedBotId
+  - energy
+  - x
+  - y
+  - direction
+  - speed

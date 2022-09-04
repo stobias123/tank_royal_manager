@@ -1,0 +1,8 @@
+---
+$id: pause_game.yaml
+$schema: https://json-schema.org/draft/2020-12/schema
+title: PauseGame
+description: Command to pause a game
+type: object
+extends:
+  $ref: message.yaml

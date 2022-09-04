@@ -1,0 +1,33 @@
+---
+$id: tick_event_for_bot.yaml
+$schema: https://json-schema.org/draft/2020-12/schema
+title: TickEventForBot
+description: Event occurring for before each new turn in the battle. Gives internal bot details.
+extends:
+  $ref: event.yaml
+properties:
+  roundNumber:
+    description: The current round number in the battle when event occurred
+    type: integer
+  enemyCount:
+    description: Number of enemies left in the current round
+    type: integer
+  botState:
+    description: Current state of this bot
+    $ref: bot_state.yaml
+  bulletStates:
+    description: Current state of the bullets fired by this bot
+    type: array
+    items:
+      $ref: bullet_state.yaml
+  events:
+    description: Events occurring in the turn relevant for this bot
+    type: array
+    items:
+      $ref: event.yaml
+required:
+  - roundNumber
+  - enemyCount
+  - botState
+  - bulletStates
+  - events

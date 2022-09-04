@@ -1,0 +1,17 @@
+---
+$id: round_ended_event.yaml
+$schema: https://json-schema.org/draft/2020-12/schema
+description: Event occurring when a round has ended.
+type: object
+extends:
+  $ref: message.yaml
+properties:
+  roundNumber:
+    description: The current round number in the battle when event occurred
+    type: integer
+  turnNumber:
+    description: The current turn number in the round when event occurred
+    type: integer
+required:
+  - roundNumber
+  - turnNumber
