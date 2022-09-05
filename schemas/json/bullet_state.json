@@ -1,0 +1,44 @@
+{
+  "$id": "bullet_state.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "BulletState",
+  "description": "Bullet state",
+  "properties": {
+    "bulletId": {
+      "description": "ID of the bullet",
+      "type": "integer"
+    },
+    "ownerId": {
+      "description": "ID of the bot that fired the bullet",
+      "type": "integer"
+    },
+    "power": {
+      "description": "Bullet firepower (between 0.1 and 3.0)",
+      "type": "number"
+    },
+    "x": {
+      "description": "X coordinate",
+      "type": "number"
+    },
+    "y": {
+      "description": "Y coordinate",
+      "type": "number"
+    },
+    "direction": {
+      "description": "Direction in degrees",
+      "type": "number"
+    },
+    "color": {
+      "description": "Color of the bullet",
+      "$ref": "color.json"
+    }
+  },
+  "required": [
+    "bulletId",
+    "ownerId",
+    "power",
+    "x",
+    "y",
+    "direction"
+  ]
+}

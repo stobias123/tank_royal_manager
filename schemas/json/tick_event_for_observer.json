@@ -1,0 +1,42 @@
+{
+  "$id": "tick-event_for_observer.json",
+  "$schema": "http://json_schema.org/2020_12/schema",
+  "title": "TickEventForObserver",
+  "description": "Event occurring for before each new turn in the battle. Gives details for observers.",
+  "extends": {
+    "$ref": "event.json"
+  },
+  "properties": {
+    "roundNumber": {
+      "description": "The current round number in the battle when event occurred",
+      "type": "integer"
+    },
+    "botStates": {
+      "description": "Current state of all bots",
+      "type": "array",
+      "items": {
+        "$ref": "bot_state_with_id.json"
+      }
+    },
+    "bulletStates": {
+      "description": "Current state of all bullets",
+      "type": "array",
+      "items": {
+        "$ref": "bullet_state.json"
+      }
+    },
+    "events": {
+      "description": "All events occurring at this tick",
+      "type": "array",
+      "items": {
+        "$ref": "event.json"
+      }
+    }
+  },
+  "required": [
+    "roundNumber",
+    "botStates",
+    "bulletStates",
+    "events"
+  ]
+}

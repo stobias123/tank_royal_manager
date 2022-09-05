@@ -1,0 +1,10 @@
+{
+  "$id": "game_resumed_event_for_observer.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "GameResumedEventForObserver",
+  "description": "Event occurring when a game is resumed from a previous pause",
+  "type": "object",
+  "extends": {
+    "$ref": "message.json"
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "$id": "stop_game.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "StopGame",
+  "description": "Command to stop a running game",
+  "type": "object",
+  "extends": {
+    "$ref": "message.json"
+  }
+}

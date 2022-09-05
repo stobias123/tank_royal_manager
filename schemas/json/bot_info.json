@@ -1,0 +1,24 @@
+{
+  "$id": "bot_info.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "BotInfo",
+  "description": "Bot info",
+  "type": "object",
+  "extends": {
+    "$ref": "bot_handshake.json"
+  },
+  "properties": {
+    "host": {
+      "description": "Host name or IP address",
+      "type": "string"
+    },
+    "port": {
+      "description": "Port number",
+      "type": "integer"
+    }
+  },
+  "required": [
+    "host",
+    "port"
+  ]
+}

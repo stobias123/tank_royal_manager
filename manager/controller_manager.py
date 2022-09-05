@@ -1,4 +1,6 @@
-from robocode_event_models import ControllerHandshake, BotAddress, StartGame, NextTurn
+import json
+
+from robocode_event_models import ControllerHandshake, BotAddress, StartGame, NextTurn, MessageType
 from manager.game_types import *
 from typing import List, Optional
 import logging
@@ -18,14 +20,11 @@ class ControllerManager:
         self.conn.send(HANDSHAKE.json())
 
     async def connect_and_listen(self):
-        await self.conn.send("hello")
         logging.info("[ControllerManager]" + await self.conn.recv())
         await self.conn.send(HANDSHAKE.json())
-        result = await self.conn.recv()
-        return result
+        logging.info("[ControllerManager]" + await self.conn.recv())
 
     async def listen_forever(self):
-        await self.conn.send(HANDSHAKE.json())
         while True:
             raw = await self.conn.recv()
             logging.info(f"[ControllerManager] {raw}")
@@ -43,3 +42,14 @@ class ControllerManager:
         await self.conn.send(packet.json())
         res = await self.conn.recv()
         return res
+
+
+class MessageHandler:
+    def __init(self):
+        pass
+
+    async def handle_message(self, str_message):
+        m = json.loads(str_message)
+        str_type = m['type']
+        if str_type == MessageType.BotListUpdate:
+            logging.info(str_type)

@@ -1,0 +1,18 @@
+{
+  "$id": "bot_death_event.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "BotDeathEvent",
+  "description": "Event occurring when a bot has died",
+  "extends": {
+    "$ref": "event.json"
+  },
+  "properties": {
+    "victimId": {
+      "description": "ID of the bot that has died",
+      "type": "integer"
+    }
+  },
+  "required": [
+    "victimId"
+  ]
+}

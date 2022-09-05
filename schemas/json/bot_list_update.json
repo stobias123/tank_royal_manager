@@ -1,0 +1,22 @@
+{
+  "$id": "bot_list_update.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "BotListUpdate",
+  "description": "Bot list update",
+  "extends": {
+    "$ref": "message.json"
+  },
+  "properties": {
+    "bots": {
+      "description": "List of bots",
+      "type": "array",
+      "items": {
+        "description": "Bot info",
+        "$ref": "bot_info.json"
+      }
+    }
+  },
+  "required": [
+    "bots"
+  ]
+}

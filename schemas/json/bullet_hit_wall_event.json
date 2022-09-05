@@ -1,0 +1,18 @@
+{
+  "$id": "bullet_hit_wall_event.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "BulletHitWallEvent",
+  "description": "Event occurring when a bullet has hit a wall",
+  "extends": {
+    "$ref": "event.json"
+  },
+  "properties": {
+    "bullet": {
+      "description": "Bullet that has hit a wall",
+      "$ref": "bullet_state.json"
+    }
+  },
+  "required": [
+    "bullet"
+  ]
+}

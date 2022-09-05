@@ -1,0 +1,23 @@
+{
+  "$id": "game_ended_event_for_bot.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "GameEndedEventForBot",
+  "description": "Event occurring when game has ended. Gives all game results visible for a bot.",
+  "extends": {
+    "$ref": "message.json"
+  },
+  "properties": {
+    "numberOfRounds": {
+      "description": "Number of rounds played",
+      "type": "integer"
+    },
+    "results": {
+      "description": "Bot results of the battle",
+      "$ref": "bot_results_for_bot.json"
+    }
+  },
+  "required": [
+    "numberOfRounds",
+    "results"
+  ]
+}

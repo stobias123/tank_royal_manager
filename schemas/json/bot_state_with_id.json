@@ -1,0 +1,18 @@
+{
+  "$id": "bot_state_with_id.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "BotStateWithID",
+  "description": "Current state of a bot, which included an id",
+  "extends": {
+    "$ref": "bot_state.json"
+  },
+  "properties": {
+    "id": {
+      "description": "ID of bot for the observer",
+      "type": "integer"
+    }
+  },
+  "required": [
+    "id"
+  ]
+}

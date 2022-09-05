@@ -1,0 +1,23 @@
+{
+  "$id": "bullet_hit_bullet_event.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "BulletHitBulletEvent",
+  "description": "Event occurring when a bullet has hit another bullet",
+  "extends": {
+    "$ref": "event.json"
+  },
+  "properties": {
+    "bullet": {
+      "description": "Bullet that hit another bullet",
+      "$ref": "bullet_state.json"
+    },
+    "hitBullet": {
+      "description": "The other bullet that was hit by the bullet",
+      "$ref": "bullet_state.json"
+    }
+  },
+  "required": [
+    "bullet",
+    "hitBullet"
+  ]
+}
