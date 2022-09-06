@@ -1,5 +1,4 @@
 import json
-import threading
 from builtins import type
 
 import asyncio
@@ -26,17 +25,4 @@ bots = []
 if __name__ == "__main__":
     controller_manager = ControllerManager(WS_ADDR)
     controller_manager.connect_and_listen()
-
-    bot1 = BotManager('bot1', WS_ADDR)
-    bot1.connect()
-
-    bot2 = BotManager('bot2', WS_ADDR)
-    bot2.connect()
-
-    t = threading.Thread(target=controller_manager.listen_forever)
-    bot1 = threading.Thread(target=bot1.listen_forever)
-    bot2 = threading.Thread(target=bot2.listen_forever)
-
-    t.start()
-    bot1.start()
-    bot2.start()
+    controller_manager.listen_forever()

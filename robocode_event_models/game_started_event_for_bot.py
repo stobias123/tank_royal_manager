@@ -6,9 +6,10 @@ from __future__ import annotations
 
 from pydantic import BaseModel, Field
 
-from . import game_setup
+from . import game_setup, MessageType
 
 
 class GameStartedEventForBot(BaseModel):
+    type: MessageType = MessageType.GameStartedEventForBot
     myId: int = Field(..., description='My ID is an unique identifier for this bot')
     gameSetup: game_setup.GameSetup = Field(..., description='Game setup')

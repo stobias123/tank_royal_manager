@@ -8,8 +8,9 @@ from typing import List
 
 from pydantic import BaseModel, Field
 
-from . import bot_info
+from . import bot_info, MessageType
 
 
 class BotListUpdate(BaseModel):
+    type: MessageType = MessageType.BotListUpdate
     bots: List[bot_info.BotInfo] = Field(..., description='List of bots')

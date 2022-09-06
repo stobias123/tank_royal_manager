@@ -24,7 +24,7 @@ async def main():
         printerTask = asyncio.create_task(printer(controller_socket))
         ## Start the controller....
         controllerTask =  asyncio.create_task(run_controller(controller_socket))
-        await asyncio.wait([printerTask,controllerTask])
+        await asyncio.wait([printerTask, controllerTask])
 
 if __name__ == "__main__":
     loop = asyncio.get_event_loop()

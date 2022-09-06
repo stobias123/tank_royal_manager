@@ -8,10 +8,11 @@ from typing import List, Optional
 
 from pydantic import BaseModel, Field
 
-from . import bot_address, game_setup
+from . import bot_address, game_setup, MessageType
 
 
 class StartGame(BaseModel):
+    type: MessageType = MessageType.StartGame
     gameSetup: Optional[game_setup.GameSetup] = Field(None, description='Game setup')
     botAddresses: List[bot_address.BotAddress] = Field(
         ..., description='List of bot addresses'
