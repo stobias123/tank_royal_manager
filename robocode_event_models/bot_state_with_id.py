@@ -6,6 +6,8 @@ from __future__ import annotations
 
 from pydantic import BaseModel, Field
 
+from robocode_event_models import BotState
 
-class BotStateWithID(BaseModel):
+
+class BotStateWithID(BotState):
     id: int = Field(..., description='ID of bot for the observer')

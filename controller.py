@@ -23,6 +23,3 @@ bots = []
 
 
 if __name__ == "__main__":
-    controller_manager = ControllerManager(WS_ADDR)
-    controller_manager.connect_and_listen()
-    controller_manager.listen_forever()

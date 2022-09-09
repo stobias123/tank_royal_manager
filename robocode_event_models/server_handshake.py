@@ -8,8 +8,12 @@ from typing import List, Optional
 
 from pydantic import BaseModel, Field
 
+from robocode_event_models import MessageType
+
 
 class ServerHandshake(BaseModel):
+    type: MessageType = MessageType.ServerHandshake
+    sessionId: str = Field(..., description='Unique Session ID')
     name: Optional[str] = Field(
         None, description="Name of server, e.g. John Doe's RoboRumble Server"
     )

@@ -82,7 +82,7 @@ class Fire(BaseModel):
         None, description='Short description of the bot, preferable a one-liner'
     )
     homepage: Optional[str] = Field(None, description='URL to a home page for the bot')
-    countryCodes: Optional[List[constr(regex=r'/^[a-z]{2}$/ig')]] = Field(
+    countryCodes: Optional[List[str]] = Field(
         None, description='2-letter country code(s) defined by ISO 3166-1, e.g. "UK"'
     )
     gameTypes: Optional[List[str]] = Field(

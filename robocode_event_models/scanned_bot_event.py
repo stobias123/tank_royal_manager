@@ -6,8 +6,11 @@ from __future__ import annotations
 
 from pydantic import BaseModel, Field
 
+from robocode_event_models import MessageType
+
 
 class ScannedBotEvent(BaseModel):
+    type: MessageType = MessageType.ScannedBotEvent
     scannedByBotId: int = Field(..., description='ID of the bot did the scanning')
     scannedBotId: int = Field(..., description='ID of the bot that was scanned')
     energy: float = Field(..., description='Energy level of the scanned bot')

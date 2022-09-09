@@ -8,10 +8,11 @@ from typing import Optional
 
 from pydantic import BaseModel, Field, confloat
 
-from . import color
+from . import color, MessageType
 
 
 class BotIntent(BaseModel):
+    type: MessageType = MessageType.BotIntent
     turnRate: Optional[float] = Field(
         None,
         description='Turn rate of the body in degrees per turn (can be positive and negative)',

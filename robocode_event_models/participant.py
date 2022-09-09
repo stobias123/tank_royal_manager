@@ -24,7 +24,7 @@ class Participant(BaseModel):
         None, description='Short description of the bot, preferable a one-liner'
     )
     homepage: Optional[str] = Field(None, description='URL to a home page for the bot')
-    countryCodes: Optional[List[constr(regex=r'/^[a-z]{2}$/ig')]] = Field(
+    countryCodes: Optional[List] = Field(
         None, description='2-letter country code(s) defined by ISO 3166-1, e.g. "UK"'
     )
     gameTypes: List[str] = Field(

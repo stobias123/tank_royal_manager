@@ -18,7 +18,7 @@ STANDARD = game_setup.GameSetup(
     maxInactivityTurns=450,
     maxNumberOfParticipants=20,
     minNumberOfParticipants=2,
-    numberOfRounds=10,
+    numberOfRounds=1,
     readyTimeout=1000000,
     turnTimeout=30000
 )

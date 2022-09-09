@@ -6,8 +6,11 @@ from __future__ import annotations
 
 from pydantic import BaseModel, Field
 
+from robocode_event_models import MessageType
+
 
 class RoundStartedEvent(BaseModel):
+    type: MessageType = MessageType.RoundStartedEvent
     roundNumber: int = Field(
         ..., description='The current round number in the battle when event occurred'
     )

@@ -16,6 +16,7 @@ class BotHandshake(BaseModel):
     type: MessageType = MessageType.BotHandshake
     name: str = Field(..., description='Name of bot, e.g. Killer Bee')
     version: str = Field(..., description='Bot version, e.g. 1.0')
+    sessionId: str = Field(..., description='Unique Session ID')
     authors: List[str] = Field(
         ..., description='Name of authors, e.g. John Doe (john_doe@somewhere.net)'
     )

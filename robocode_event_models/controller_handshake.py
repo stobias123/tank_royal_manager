@@ -12,6 +12,7 @@ from .message import MessageType
 
 class ControllerHandshake(BaseModel):
     type: MessageType = MessageType.ControllerHandshake
+    sessionId: str = Field(..., description='Unique Session ID')
     name: str = Field(
         ..., description='Name of controller, e.g. Fancy Robocode Controller'
     )

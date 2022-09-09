@@ -8,10 +8,11 @@ from typing import List
 
 from pydantic import BaseModel, Field
 
-from . import game_setup, participant
+from . import game_setup, participant, MessageType
 
 
 class GameStartedEventForObserver(BaseModel):
+    type: MessageType = MessageType.GameStartedEventForObserver
     gameSetup: game_setup.GameSetup = Field(..., description='Game setup')
     participants: List[participant.Participant] = Field(
         ..., description='List of bots participating in this battle'

@@ -6,6 +6,9 @@ from __future__ import annotations
 
 from pydantic import BaseModel
 
+from robocode_event_models import MessageType
+
 
 class SkippedTurnEvent(BaseModel):
+    type: MessageType = MessageType.SkippedTurnEvent
     pass

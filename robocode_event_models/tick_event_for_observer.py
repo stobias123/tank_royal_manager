@@ -8,10 +8,11 @@ from typing import List
 
 from pydantic import BaseModel, Field
 
-from . import bot_state_with_id, bullet_state, event
+from . import bot_state_with_id, bullet_state, event, MessageType
 
 
 class TickEventForObserver(BaseModel):
+    type: MessageType = MessageType.TickEventForObserver
     roundNumber: int = Field(
         ..., description='The current round number in the battle when event occurred'
     )

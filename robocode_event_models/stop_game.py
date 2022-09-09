@@ -6,6 +6,8 @@ from __future__ import annotations
 
 from pydantic import BaseModel
 
+from robocode_event_models import MessageType
+
 
 class StopGame(BaseModel):
-    pass
+    type: MessageType = MessageType.StopGame

@@ -6,6 +6,9 @@ from __future__ import annotations
 
 from pydantic import BaseModel
 
+from robocode_event_models import MessageType
+
 
 class GameAbortedEvent(BaseModel):
+    type: MessageType = MessageType.GameAbortedEvent
     pass

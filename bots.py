@@ -1,15 +1,14 @@
-import json
 import threading
-from builtins import type
-
-import asyncio
 from time import sleep
 
-import websockets
-import concurrent.futures
+import rel
+
+# ws = websocket.WebSocketApp()
+# ws.send()
 
 from manager.controller_manager import ControllerManager
-from manager.bot_manager import BotManager
+from manager.bot_manager import *
+from manager.game_types import STANDARD
 import logging
 import sys
 
@@ -22,21 +21,31 @@ WS_ADDR = "ws://localhost:7654"
 
 bots = []
 
-
 if __name__ == "__main__":
     controller_manager = ControllerManager(WS_ADDR)
-    controller_manager.connect_and_listen()
+    controller_manager.conn.run_forever(dispatcher=rel)
+    rel.signal(2, rel.abort)  # Keyboard Interrupt
 
-    bot1 = BotManager('bot1', WS_ADDR)
-    bot1.connect()
+    messageHandler = DriveAndScanBot
+    fireBot = ScanAndFireBot
 
-    bot2 = BotManager('bot2', WS_ADDR)
-    bot2.connect()
+    bot1 = BotManager('bot1', WS_ADDR, messageHandler)
+    bot2 = BotManager('bot2', WS_ADDR, fireBot)
 
-    t = threading.Thread(target=controller_manager.listen_forever)
-    bot1 = threading.Thread(target=bot1.listen_forever)
-    bot2 = threading.Thread(target=bot2.listen_forever)
+    bot1.conn.run_forever(dispatcher=rel)
+    bot2.conn.run_forever(dispatcher=rel)
+    #bot1 = threading.Thread(target=bot1.conn.run_forever)
+    #bot2 = threading.Thread(target=bot2.conn.run_forever)
 
-    t.start()
-    bot1.start()
-    bot2.start()
+    controller = threading.Thread(target=rel.dispatch)
+    controller.start()
+    #bot1.start()
+    #bot2.start()
+    for i in range(0, 501):
+        if i % 100 == 0:
+            logging.info("Steppin bitch")
+        controller_manager.step()
+        ## Sleep just a bit longer than the turn timeout.
+        ## I think that sometimes, if we send next turn event out of sequence, then the tick event doesn't go right?
+        sleep((STANDARD.turnTimeout / 1000000) + .01)
+    logging.info("Finished!")
