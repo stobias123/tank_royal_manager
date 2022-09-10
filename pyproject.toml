@@ -3,10 +3,10 @@ requires = ["setuptools>=61.0"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "birdml"
+name = "tank-royal-manager"
 version = "0.0.1"
 authors = [
-  { name="Steven Tobias", email="steven.tobias@bird.co" },
+  { name="Steven Tobias", email="noway" },
 ]
 description = "Bird ML utils"
 readme = "README.md"
