@@ -26,7 +26,6 @@ class BotManager:
         thread = threading.Thread(target=rel.dispatch)
         thread.start()
 
-
     def connect(self):
         handshake = bot_handshake.BotHandshake(
             name=self.bot_name,
@@ -38,25 +37,6 @@ class BotManager:
             gameTypes=["1v1", "melee", "classic"]
         )
         self.conn.send(handshake.json())
-
-
-    def on_close(self, ws, close_status_code, close_msg):
-        print("### closed ###")
-        rel.abort()
-        self.conn.run_forever(dispatcher=rel)
-        rel.signal(2, rel.abort)
-        rel.dispatch()
-
-    def error(self, ws, e):
-        if type(e) == websocket.WebSocketConnectionClosedException:
-            logging.warning("Websocket errored out. Retrying connection.")
-            rel.abort()
-            self.conn.run_forever(dispatcher=rel)
-            #rel.signal(2, rel.abort)
-            rel.dispatch()
-            return
-        else:
-            logging.info(f"Websocket Error {e}")
 
 class BaseBotMessageHandler:
     def __init__(self, man: BotManager):
