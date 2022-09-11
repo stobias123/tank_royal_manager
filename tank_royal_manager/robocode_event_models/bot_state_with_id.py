@@ -6,7 +6,7 @@ from __future__ import annotations
 
 from pydantic import BaseModel, Field
 
-from robocode_event_models import BotState
+from tank_royal_manager.robocode_event_models import BotState
 
 
 class BotStateWithID(BotState):

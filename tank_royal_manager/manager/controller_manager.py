@@ -1,11 +1,13 @@
 import json
+import threading
 import time
 from time import sleep
 
+import rel as rel
 from pydantic import BaseModel
 
-from robocode_event_models import *
-from manager.game_types import *
+from tank_royal_manager.robocode_event_models import *
+from tank_royal_manager.manager.game_types import *
 from typing import List, Optional
 import logging
 import websocket
@@ -17,9 +19,7 @@ class ControllerManager:
         self.session_id = ''
         self.conn = websocket.WebSocketApp(
             url=ws_address,
-            on_message=self.message_handler.handle_message,
-            on_close=self.close,
-            on_error=self.error
+            on_message=self.message_handler.handle_message
         )
         self.turn_count = 0
         self.turn_limit = turn_limit
@@ -27,6 +27,13 @@ class ControllerManager:
         self.step_ready = True
         #logging.info("[ControllerManager] Connected: " + self.conn.recv())
         logging.info("[ControllerManager] Connected")
+
+
+    def start_thread(self):
+        self.conn.run_forever(dispatcher=rel, reconnect=True)
+        rel.signal(2, rel.abort)
+        thread = threading.Thread(target=rel.dispatch)
+        thread.start()
 
     def handshake(self):
         HANDSHAKE = ControllerHandshake(
@@ -44,12 +51,24 @@ class ControllerManager:
             botAddresses=self.bot_list
         )
         self.conn.send(packet.json())
+
     def error(self, ws , e):
-        logging.info("Websocket Error")
-        exit(0)
-    def close(self, ws, close_status_code, close_msg):
-        logging.info("Websocket Lost")
-        exit(0)
+        if type(e) == websocket.WebSocketConnectionClosedException:
+            logging.warning("Websocket errored out. Retrying connection.")
+            rel.abort()
+            self.conn.run_forever(dispatcher=rel, reconnect=True)
+            rel.signal(2, rel.abort)
+            rel.dispatch()
+            return
+        else:
+            logging.warning(f"Websocket Error {e}")
+
+    def on_close(self, ws, close_status_code, close_msg):
+        print("### closed ###")
+        rel.abort()
+        self.conn.run_forever(dispatcher=rel)
+        rel.signal(2, rel.abort)
+        rel.dispatch()
 
     def pause(self):
         self.conn.send(PauseGame().json())

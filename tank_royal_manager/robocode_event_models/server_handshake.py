@@ -8,7 +8,7 @@ from typing import List, Optional
 
 from pydantic import BaseModel, Field
 
-from robocode_event_models import MessageType
+from tank_royal_manager.robocode_event_models import MessageType
 
 
 class ServerHandshake(BaseModel):

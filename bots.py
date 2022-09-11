@@ -6,9 +6,9 @@ import rel
 # ws = websocket.WebSocketApp()
 # ws.send()
 
-from manager.controller_manager import ControllerManager
-from manager.bot_manager import *
-from manager.game_types import STANDARD
+from tank_royal_manager.manager.controller_manager import ControllerManager
+from tank_royal_manager.manager.bot_manager import *
+from tank_royal_manager.manager.game_types import STANDARD
 import logging
 import sys
 
@@ -23,8 +23,7 @@ bots = []
 
 if __name__ == "__main__":
     controller_manager = ControllerManager(WS_ADDR)
-    controller_manager.conn.run_forever(dispatcher=rel)
-    rel.signal(2, rel.abort)  # Keyboard Interrupt
+    controller_manager.start_thread()
 
     messageHandler = DriveAndScanBot
     fireBot = ScanAndFireBot
@@ -32,13 +31,12 @@ if __name__ == "__main__":
     bot1 = BotManager('bot1', WS_ADDR, messageHandler)
     bot2 = BotManager('bot2', WS_ADDR, fireBot)
 
-    bot1.conn.run_forever(dispatcher=rel)
-    bot2.conn.run_forever(dispatcher=rel)
+    bot1.start_thread()
+    bot2.start_thread()
+    sleep(10)
     #bot1 = threading.Thread(target=bot1.conn.run_forever)
     #bot2 = threading.Thread(target=bot2.conn.run_forever)
 
-    controller = threading.Thread(target=rel.dispatch)
-    controller.start()
     #bot1.start()
     #bot2.start()
     for i in range(0, 501):

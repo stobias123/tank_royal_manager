@@ -1,4 +1,4 @@
-from robocode_event_models import game_setup
+from tank_royal_manager.robocode_event_models import game_setup
 
 STANDARD = game_setup.GameSetup(
     arenaHeight=600,

@@ -1,9 +1,11 @@
 import json
+import threading
 
 import websocket
 from pydantic import BaseModel
+import rel
 
-from robocode_event_models import *
+from tank_royal_manager.robocode_event_models import *
 import logging
 
 
@@ -11,13 +13,19 @@ class BotManager:
     def __init__(self, name: str, ws_addr: str, messageHandler):
         self.handler = messageHandler(man=self)
         self.session_id = ''
+        self.bot_name = name
         self.conn = websocket.WebSocketApp(
             url=ws_addr,
-            on_message=self.handler.handle_message,
-            on_close=self.close,
-            on_error=self.error
+            on_message=self.handler.handle_message
         )
-        self.bot_name = name
+        logging.info("[ControllerManager] Connected")
+
+    def start_thread(self):
+        self.conn.run_forever(dispatcher=rel, reconnect=True)
+        rel.signal(2, rel.abort)
+        thread = threading.Thread(target=rel.dispatch)
+        thread.start()
+
 
     def connect(self):
         handshake = bot_handshake.BotHandshake(
@@ -31,12 +39,24 @@ class BotManager:
         )
         self.conn.send(handshake.json())
 
-    def close(self, ws, close_status_code, close_msg):
-        logging.info("Websocket Lost")
-        exit(0)
+
+    def on_close(self, ws, close_status_code, close_msg):
+        print("### closed ###")
+        rel.abort()
+        self.conn.run_forever(dispatcher=rel)
+        rel.signal(2, rel.abort)
+        rel.dispatch()
+
     def error(self, ws, e):
-        logging.info("Websocket Error")
-        exit(0)
+        if type(e) == websocket.WebSocketConnectionClosedException:
+            logging.warning("Websocket errored out. Retrying connection.")
+            rel.abort()
+            self.conn.run_forever(dispatcher=rel)
+            #rel.signal(2, rel.abort)
+            rel.dispatch()
+            return
+        else:
+            logging.info(f"Websocket Error {e}")
 
 class BaseBotMessageHandler:
     def __init__(self, man: BotManager):

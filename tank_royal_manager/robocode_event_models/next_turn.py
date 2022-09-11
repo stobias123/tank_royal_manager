@@ -6,7 +6,7 @@ from __future__ import annotations
 
 from pydantic import BaseModel
 
-from robocode_event_models import MessageType
+from tank_royal_manager.robocode_event_models import MessageType
 
 
 class NextTurn(BaseModel):

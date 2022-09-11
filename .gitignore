@@ -2,3 +2,4 @@ venv/
 __pycache__/
 manager/__pycache__/
 .idea/
+tank_royal_manager.egg-info/
