@@ -13,21 +13,16 @@ import logging
 import websocket
 
 
-class ControllerManager:
+class BaseControllerManager:
     def __init__(self, ws_address: str, turn_limit: int = 500):
-        self.message_handler = ControllerMessageHandler(self)
         self.session_id = ''
-        self.conn = websocket.WebSocketApp(
-            url=ws_address,
-            on_message=self.message_handler.handle_message
-        )
+        self.conn = None
         self.turn_count = 0
         self.turn_limit = turn_limit
         self.bot_list: List[BotAddress] = []
         self.step_ready = True
         #logging.info("[ControllerManager] Connected: " + self.conn.recv())
         logging.info("[ControllerManager] Connected")
-
 
     def start_thread(self):
         self.conn.run_forever(dispatcher=rel, reconnect=True)
@@ -51,6 +46,8 @@ class ControllerManager:
             botAddresses=self.bot_list
         )
         self.conn.send(packet.json())
+    def handle_message(self, ws, str_message: str):
+        print("Not Implemented")
 
     def error(self, ws , e):
         if type(e) == websocket.WebSocketConnectionClosedException:
@@ -83,9 +80,13 @@ class ControllerManager:
         # return res
 
 
-class ControllerMessageHandler:
-    def __init__(self, man: ControllerManager):
-        self.man = man
+class ControllerManager(BaseControllerManager):
+    def __init__(self, ws_address: str, turn_limit: int = 500):
+        super().__init__(ws_address,turn_limit)
+        self.conn = websocket.WebSocketApp(
+            url=ws_address,
+            on_message=self.handle_message
+        )
         self.CONTROLLER_MESSAGE_MAP = {
             MessageType.BotListUpdate: BotListUpdate,
             MessageType.RoundStartedEvent: RoundStartedEvent,
@@ -131,16 +132,17 @@ class ControllerMessageHandler:
 
     def handle_bot_list_update(self, bot_list: BotListUpdate):
         # Clear it b/c we get a whole new array every time.
-        self.man.bot_list = []
+        self.bot_list = []
         for bot in bot_list.bots:
-            self.man.bot_list.append(BotAddress(host=bot.host, port=bot.port))
-        if len(self.man.bot_list) > 1:
-            self.man.start()
+            self.bot_list.append(BotAddress(host=bot.host, port=bot.port))
+        if len(self.bot_list) > 1:
+            self.start()
+
 
     def handle_round_start(self, round_start_event: RoundStartedEvent):
         logging.debug(f"[ControllerManager] Round Started!")
-        self.man.pause()
-        ##self.man.conn.send(PauseGame().json())
+        self.pause()
+        ##self.conn.send(PauseGame().json())
 
     def handle_game_start(self, round_start_event: GameStartedEventForObserver):
         """
@@ -150,9 +152,9 @@ class ControllerMessageHandler:
         """
         logging.debug(f"[ControllerManager] Game Started!")
     def handle_server_handshake(self, handshake: ServerHandshake):
-        self.man.session_id = handshake.sessionId
+        self.session_id = handshake.sessionId
         logging.debug(f"[ControllerManager] Handshake received")
-        self.man.handshake()
+        self.handshake()
 
     def handle_game_aborted(self, game_aborted_event: GameAbortedEvent):
         logging.info(f"[ControllerManager] Round Aborted! Exiting!")
@@ -163,8 +165,8 @@ class ControllerMessageHandler:
         exit(0)
 
     def handle_tick(self, tick_event: TickEventForObserver):
-        if self.man.turn_count >= self.man.turn_limit:
-            self.man.conn.send(StopGame().json())
-        self.man.turn_count = self.man.turn_count + 1
-        if self.man.turn_count % 50 == 0:
-            logging.info(f"[ControllerManager] Tick {self.man.turn_count}\n {tick_event.json()}")
+        if self.turn_count >= self.turn_limit:
+            self.conn.send(StopGame().json())
+        self.turn_count = self.turn_count + 1
+        if self.turn_count % 50 == 0:
+            logging.info(f"[ControllerManager] Tick {self.turn_count}\n {tick_event.json()}")

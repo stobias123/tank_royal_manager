@@ -10,14 +10,10 @@ import logging
 
 
 class BotManager:
-    def __init__(self, name: str, ws_addr: str, messageHandler):
-        self.handler = messageHandler(man=self)
+    def __init__(self, name: str, ws_addr: str):
         self.session_id = ''
         self.bot_name = name
-        self.conn = websocket.WebSocketApp(
-            url=ws_addr,
-            on_message=self.handler.handle_message
-        )
+        self.conn = None
         logging.info("[ControllerManager] Connected")
 
     def start_thread(self):
@@ -38,9 +34,19 @@ class BotManager:
         )
         self.conn.send(handshake.json())
 
-class BaseBotMessageHandler:
-    def __init__(self, man: BotManager):
-        self.man = man
+    def handle_message(self):
+        print("Not Implemented")
+
+
+class BaseBotMessageHandler(BotManager):
+    def __init__(self, name: str, ws_addr: str):
+        super().__init__(name, ws_addr)
+        self.conn = websocket.WebSocketApp(
+            url=ws_addr,
+            on_message=self.handle_message
+        )
+        self.last_tick = None
+        self.queued_intent = None
         self.BOT_MESSAGE_MAP = {
             MessageType.BotListUpdate: BotListUpdate,
             MessageType.GameStartedEventForBot: GameStartedEventForBot,
@@ -77,33 +83,33 @@ class BaseBotMessageHandler:
         return self.BOT_FUNC_MAP[m.type](m)
 
     def handle_game_started(self, event: GameStartedEventForBot):
-        logging.debug(f"[{self.man.bot_name}] Received game started event!")
-        self.man.conn.send(BotReady().json())
+        logging.debug(f"[{self.bot_name}] Received game started event!")
+        self.conn.send(BotReady().json())
 
     def handle_game_aborted(self, game_aborted_event: GameAbortedEvent):
         logging.info(f"[ControllerManager] Round Aborted! Exiting")
         exit(0)
 
     def handle_round_started(self, event: RoundStartedEvent):
-        logging.debug(f"[{self.man.bot_name}] Received round started event!")
-        self.man.conn.send(BotReady().json())
+        logging.debug(f"[{self.bot_name}] Received round started event!")
+        self.conn.send(BotReady().json())
 
     def handle_tick(self, tick: TickEventForBot):
-        logging.debug(f"[{self.man.bot_name}] BotTick {tick.json()}")
+        logging.debug(f"[{self.bot_name}] BotTick {tick.json()}")
 
     def handle_skip(self, skip_event: SkippedTurnEvent):
-        # logging.warn(f"[{self.man.bot_name}] Warning - Skipped a turn")
+        # logging.warn(f"[{self.bot_name}] Warning - Skipped a turn")
         pass
 
     def server_handshake(self, handshake: ServerHandshake):
-        self.man.session_id = handshake.sessionId
-        logging.debug(f"[{self.man.bot_name}] Server Handshake received.")
-        self.man.connect()
+        self.session_id = handshake.sessionId
+        logging.debug(f"[{self.bot_name}] Server Handshake received.")
+        self.connect()
 
 
 class ScanAndFireBot(BaseBotMessageHandler):
     def handle_tick(self, tick: TickEventForBot):
-        self.man.conn.send(BotIntent(firepower=1).json())
+        self.conn.send(BotIntent(firepower=1).json())
 
 
 class DriveAndScanBot(BaseBotMessageHandler):
@@ -113,7 +119,7 @@ class DriveAndScanBot(BaseBotMessageHandler):
 
     def handle_tick(self, tick: TickEventForBot):
         intent = BotIntent(targetSpeed=1, radarTurnRate=999)
-        self.man.conn.send(intent.json())
+        self.conn.send(intent.json())
         if len(tick.events) > 0:
             self.parse_events(tick.events)
 
