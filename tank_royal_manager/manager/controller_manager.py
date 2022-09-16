@@ -21,6 +21,7 @@ class BaseControllerManager:
         self.turn_limit = turn_limit
         self.bot_list: List[BotAddress] = []
         self.step_ready = True
+        self.game_over = False
         #logging.info("[ControllerManager] Connected: " + self.conn.recv())
         logging.info("[ControllerManager] Connected")
 
@@ -106,7 +107,7 @@ class ControllerManager(BaseControllerManager):
             MessageType.TickEventForObserver: self.handle_tick,
             MessageType.GameStartedEventForObserver: self.handle_game_start,
             MessageType.GameAbortedEvent: self.handle_game_aborted,
-            MessageType.GameEndedEventForObserver: self.handle_game_aborted,
+            MessageType.GameEndedEventForObserver: self.handle_game_ended,
             MessageType.GamePausedEventForObserver: self.handle_pause,
             MessageType.GameResumedEventForObserver: self.handle_pause,
             MessageType.PauseGame: self.handle_pause,
@@ -157,10 +158,12 @@ class ControllerManager(BaseControllerManager):
         self.handshake()
 
     def handle_game_aborted(self, game_aborted_event: GameAbortedEvent):
+        self.game_over = True
         logging.info(f"[ControllerManager] Round Aborted! Exiting!")
         exit(0)
 
     def handle_game_ended(self, game_aborted_event: GameEndedEventForObserver):
+        self.game_over = True
         logging.info(f"[ControllerManager] Round Ended! Exiting!")
         exit(0)
 

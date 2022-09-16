@@ -6,10 +6,11 @@ from __future__ import annotations
 
 from pydantic import BaseModel, Field
 
-from . import bot_results_for_bot
+from . import bot_results_for_bot, MessageType
 
 
 class GameEndedEventForBot(BaseModel):
+    type: MessageType = MessageType.GameEndedEventForBot
     numberOfRounds: int = Field(..., description='Number of rounds played')
     results: bot_results_for_bot.BotResultsForBot = Field(
         ..., description='Bot results of the battle'

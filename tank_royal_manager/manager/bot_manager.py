@@ -14,7 +14,9 @@ class BotManager:
         self.session_id = ''
         self.bot_name = name
         self.conn = None
-        logging.info("[ControllerManager] Connected")
+        self.bots: List[ScannedBotEvent] = []
+        self.bot_state: BotState = None
+        logging.info("[BotManager] Connected")
 
     def start_thread(self):
         self.conn.run_forever(dispatcher=rel, reconnect=True)
@@ -41,6 +43,7 @@ class BotManager:
 class BaseBotMessageHandler(BotManager):
     def __init__(self, name: str, ws_addr: str):
         super().__init__(name, ws_addr)
+        self.intent = BotIntent()
         self.conn = websocket.WebSocketApp(
             url=ws_addr,
             on_message=self.handle_message
@@ -54,6 +57,7 @@ class BaseBotMessageHandler(BotManager):
             MessageType.TickEventForBot: TickEventForBot,
             MessageType.SkippedTurnEvent: SkippedTurnEvent,
             MessageType.GameAbortedEvent: GameAbortedEvent,
+            MessageType.GameEndedEventForBot: GameEndedEventForBot,
             MessageType.ServerHandshake: ServerHandshake
         }
 
@@ -63,7 +67,8 @@ class BaseBotMessageHandler(BotManager):
             MessageType.TickEventForBot: self.handle_tick,
             MessageType.SkippedTurnEvent: self.handle_skip,
             MessageType.GameAbortedEvent: self.handle_game_aborted,
-            MessageType.ServerHandshake: self.server_handshake
+            MessageType.ServerHandshake: self.server_handshake,
+            MessageType.GameEndedEventForBot: self.handle_game_ended
         }
 
     # parse_message parses the message type so that we can construct an object,
@@ -79,8 +84,13 @@ class BaseBotMessageHandler(BotManager):
         logging.debug(f"[Bot] - {str_message}")
         m = self.deserialize_message(str_message)
         if m is None:
-            logging.error(f"Problem with the message deserializagion")
+            logging.error(f"Problem with the message deserialization")
         return self.BOT_FUNC_MAP[m.type](m)
+
+    # handle game ended
+    def handle_game_ended(self, game_ended_event: GameEndedEventForBot):
+        logging.info(f"[{self.bot_name}] Game Ended! Exiting")
+        exit(0)
 
     def handle_game_started(self, event: GameStartedEventForBot):
         logging.debug(f"[{self.bot_name}] Received game started event!")

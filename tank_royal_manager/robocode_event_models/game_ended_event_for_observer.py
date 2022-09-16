@@ -8,10 +8,11 @@ from typing import List
 
 from pydantic import BaseModel, Field
 
-from . import bot_results_for_observer
+from . import bot_results_for_observer, MessageType
 
 
 class GameEndedEventForObserver(BaseModel):
+    type: MessageType = MessageType.GameEndedEventForObserver
     numberOfRounds: int = Field(..., description='Number of rounds played')
     results: List[bot_results_for_observer.BotResultsForObserver] = Field(
         ..., description='Results of the battle'
