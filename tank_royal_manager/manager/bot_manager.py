@@ -90,7 +90,7 @@ class BaseBotMessageHandler(BotManager):
     # handle game ended
     def handle_game_ended(self, game_ended_event: GameEndedEventForBot):
         logging.info(f"[{self.bot_name}] Game Ended! Exiting")
-        exit(0)
+        #exit(0)
 
     def handle_game_started(self, event: GameStartedEventForBot):
         logging.debug(f"[{self.bot_name}] Received game started event!")
@@ -98,7 +98,7 @@ class BaseBotMessageHandler(BotManager):
 
     def handle_game_aborted(self, game_aborted_event: GameAbortedEvent):
         logging.info(f"[ControllerManager] Round Aborted! Exiting")
-        exit(0)
+        #exit(0)
 
     def handle_round_started(self, event: RoundStartedEvent):
         logging.debug(f"[{self.bot_name}] Received round started event!")

@@ -14,11 +14,10 @@ import websocket
 
 
 class BaseControllerManager:
-    def __init__(self, ws_address: str, turn_limit: int = 500):
+    def __init__(self, ws_address: str):
         self.session_id = ''
         self.conn = None
         self.turn_count = 0
-        self.turn_limit = turn_limit
         self.bot_list: List[BotAddress] = []
         self.step_ready = True
         self.game_over = False
@@ -82,8 +81,8 @@ class BaseControllerManager:
 
 
 class ControllerManager(BaseControllerManager):
-    def __init__(self, ws_address: str, turn_limit: int = 500):
-        super().__init__(ws_address,turn_limit)
+    def __init__(self, ws_address: str):
+        super().__init__(ws_address)
         self.conn = websocket.WebSocketApp(
             url=ws_address,
             on_message=self.handle_message
@@ -160,16 +159,14 @@ class ControllerManager(BaseControllerManager):
     def handle_game_aborted(self, game_aborted_event: GameAbortedEvent):
         self.game_over = True
         logging.info(f"[ControllerManager] Round Aborted! Exiting!")
-        exit(0)
+        #exit(0)
 
     def handle_game_ended(self, game_aborted_event: GameEndedEventForObserver):
         self.game_over = True
         logging.info(f"[ControllerManager] Round Ended! Exiting!")
-        exit(0)
+        #exit(0)
 
     def handle_tick(self, tick_event: TickEventForObserver):
-        if self.turn_count >= self.turn_limit:
-            self.conn.send(StopGame().json())
         self.turn_count = self.turn_count + 1
         if self.turn_count % 50 == 0:
             logging.info(f"[ControllerManager] Tick {self.turn_count}\n {tick_event.json()}")
