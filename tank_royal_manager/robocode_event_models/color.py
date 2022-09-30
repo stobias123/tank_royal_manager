@@ -8,7 +8,7 @@ from pydantic import BaseModel, Field, constr
 
 
 class Color(BaseModel):
-    __root__: constr(regex=r'/^#[0-9A-F]{3,6}$/ig') = Field(
+    __root__: str = Field(
         ...,
         description='Represents a color using hexadecimal format for web colors. Note that colors must have a leading number sign (#).\nSee https://en.wikipedia.org/wiki/Web_colors\n',
         examples=[
