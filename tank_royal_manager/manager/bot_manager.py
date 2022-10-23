@@ -90,6 +90,7 @@ class BaseBotMessageHandler(BotManager):
     # handle game ended
     def handle_game_ended(self, game_ended_event: GameEndedEventForBot):
         logging.info(f"[{self.bot_name}] Game Ended! Exiting")
+        logging.info(f"[{self.bot_name}]  -- GameEnd Event -- {game_ended_event}")
         #exit(0)
 
     def handle_game_started(self, event: GameStartedEventForBot):
