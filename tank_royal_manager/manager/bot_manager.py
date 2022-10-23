@@ -17,12 +17,15 @@ class BotManager:
         self.bots: List[ScannedBotEvent] = []
         self.bot_state: BotState = None
         logging.info("[BotManager] Connected")
+        rel.signal(2, rel.abort)
+        self.thread = threading.Thread(target=rel.dispatch)
 
     def start_thread(self):
         self.conn.run_forever(dispatcher=rel, reconnect=True)
-        rel.signal(2, rel.abort)
-        thread = threading.Thread(target=rel.dispatch)
-        thread.start()
+        self.thread.start()
+
+    def stop_thread(self):
+        rel.abort()
 
     def connect(self):
         handshake = bot_handshake.BotHandshake(
