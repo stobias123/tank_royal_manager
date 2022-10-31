@@ -16,7 +16,6 @@ class BotManager:
         self.conn = None
         self.bots: List[ScannedBotEvent] = []
         self.bot_state: BotState = None
-        logging.info("[BotManager] Connected")
         rel.signal(2, rel.abort)
         self.thread = threading.Thread(target=rel.dispatch)
 
@@ -47,6 +46,7 @@ class BaseBotMessageHandler(BotManager):
     def __init__(self, name: str, ws_addr: str):
         super().__init__(name, ws_addr)
         self.intent = BotIntent()
+        logging.info(f"[BotManager] Trying to connect to {ws_addr}")
         self.conn = websocket.WebSocketApp(
             url=ws_addr,
             on_message=self.handle_message
@@ -74,6 +74,11 @@ class BaseBotMessageHandler(BotManager):
             MessageType.GameEndedEventForBot: self.handle_game_ended
         }
 
+    def log_open(self, ws, message):
+        logging.debug(f"[BotManager] Connected")
+
+    def log_error(self, ws, message):
+        logging.debug(f"[BotManager] Error")
     # parse_message parses the message type so that we can construct an object,
     # then returns the correct (python) type for that message.
     def deserialize_message(self, str_message: str) -> BaseModel:
@@ -92,16 +97,14 @@ class BaseBotMessageHandler(BotManager):
 
     # handle game ended
     def handle_game_ended(self, game_ended_event: GameEndedEventForBot):
-        logging.info(f"[{self.bot_name}] Game Ended! Exiting")
         logging.info(f"[{self.bot_name}]  -- GameEnd Event -- {game_ended_event}")
-        #exit(0)
 
     def handle_game_started(self, event: GameStartedEventForBot):
         logging.debug(f"[{self.bot_name}] Received game started event!")
         self.conn.send(BotReady().json())
 
     def handle_game_aborted(self, game_aborted_event: GameAbortedEvent):
-        logging.info(f"[ControllerManager] Round Aborted! Exiting")
+        logging.info(f"[ControllerManager] Round Aborted!")
         #exit(0)
 
     def handle_round_started(self, event: RoundStartedEvent):

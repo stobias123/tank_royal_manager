@@ -18,10 +18,12 @@ class BaseControllerManager:
         self.session_id = ''
         self.conn = None
         self.turn_count = 0
+        self.roundNumber = 0
         self.bot_list: List[BotAddress] = []
         self.step_ready = True
         self.game_over = False
-        #logging.info("[ControllerManager] Connected: " + self.conn.recv())
+        self.reset_turn = False
+        # logging.info("[ControllerManager] Connected: " + self.conn.recv())
         logging.info("[ControllerManager] Connected")
 
     def start_thread(self):
@@ -37,19 +39,22 @@ class BaseControllerManager:
             version='1.0',
             secret="abc123")
         self.conn.send(HANDSHAKE.json())
-        #logging.info("[ControllerManager] Handshake " + self.conn.recv())
+        # logging.info("[ControllerManager] Handshake " + self.conn.recv())
         logging.info("[ControllerManager] Handshake")
 
     def start(self):
+        self.game_over = False
+        self.reset_turn = True
         packet = StartGame(
             gameSetup=STANDARD,
             botAddresses=self.bot_list
         )
         self.conn.send(packet.json())
+
     def handle_message(self, ws, str_message: str):
         print("Not Implemented")
 
-    def error(self, ws , e):
+    def error(self, ws, e):
         if type(e) == websocket.WebSocketConnectionClosedException:
             logging.warning("Websocket errored out. Retrying connection.")
             rel.abort()
@@ -72,6 +77,13 @@ class BaseControllerManager:
 
     def stop(self):
         self.conn.send(StopGame().json())
+
+    def end_round(self):
+        self.conn.send(RoundEndedEvent(
+            roundNumber=self.roundNumber,
+            turnNumber=self.turn_count,
+        ).json())
+        self.roundNumber += 1
 
     def step(self):
         packet = NextTurn()
@@ -113,6 +125,12 @@ class ControllerManager(BaseControllerManager):
             MessageType.ServerHandshake: self.handle_server_handshake
         }
 
+    def log_open(self, ws, message):
+        logging.debug("[ControllerManager] Connected")
+
+    def log_error(self, ws, message):
+        logging.debug("[ControllerManager] Error")
+
     # parse_message parses the message type so that we can construct an object,
     # then returns the correct (python) type for that message.
     def deserialize_message(self, str_message: str) -> BaseModel:
@@ -138,7 +156,6 @@ class ControllerManager(BaseControllerManager):
         if len(self.bot_list) > 1:
             self.start()
 
-
     def handle_round_start(self, round_start_event: RoundStartedEvent):
         logging.debug(f"[ControllerManager] Round Started!")
         self.pause()
@@ -151,20 +168,29 @@ class ControllerManager(BaseControllerManager):
         :return:
         """
         logging.debug(f"[ControllerManager] Game Started!")
+
     def handle_server_handshake(self, handshake: ServerHandshake):
         self.session_id = handshake.sessionId
         logging.debug(f"[ControllerManager] Handshake received")
         self.handshake()
 
     def handle_game_aborted(self, game_aborted_event: GameAbortedEvent):
-        self.game_over = True
-        logging.info(f"[ControllerManager] Round Aborted! Exiting!")
-        #exit(0)
+        if not self.reset_turn:
+            self.game_over = True
+            logging.info(f"[ControllerManager] Game Aborted!")
+        else:
+            self.reset_turn = False
+            logging.info("[ControllerManager] Game Aborted Event - Were in a reset turn..")
+        # exit(0)
 
     def handle_game_ended(self, game_aborted_event: GameEndedEventForObserver):
-        self.game_over = True
-        logging.info(f"[ControllerManager] Round Ended! Exiting!")
-        #exit(0)
+        if (not self.reset_turn):
+            self.game_over = True
+            logging.info(f"[ControllerManager] Round Ended!")
+        else:
+            logging.info("[ControllerManager] Game Ended event - Were in a reset turn..")
+            self.reset_turn = False
+        # exit(0)
 
     def handle_tick(self, tick_event: TickEventForObserver):
         self.turn_count = self.turn_count + 1

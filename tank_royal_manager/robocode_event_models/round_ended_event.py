@@ -7,7 +7,7 @@ from __future__ import annotations
 from pydantic import BaseModel, Field
 
 
-class Model(BaseModel):
+class RoundEndedEvent(BaseModel):
     roundNumber: int = Field(
         ..., description='The current round number in the battle when event occurred'
     )
