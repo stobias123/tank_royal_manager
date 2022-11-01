@@ -44,7 +44,6 @@ class BaseControllerManager:
 
     def start(self):
         self.game_over = False
-        self.reset_turn = True
         packet = StartGame(
             gameSetup=STANDARD,
             botAddresses=self.bot_list
