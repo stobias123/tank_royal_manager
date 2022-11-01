@@ -176,19 +176,13 @@ class ControllerManager(BaseControllerManager):
     def handle_game_aborted(self, game_aborted_event: GameAbortedEvent):
         if not self.reset_turn:
             self.game_over = True
-            logging.info(f"[ControllerManager] Game Aborted!")
-        else:
-            self.reset_turn = False
-            logging.info("[ControllerManager] Game Aborted Event - Were in a reset turn..")
+            logging.info(f"[ControllerManager] Game Aborted! Plz reset properly")
         # exit(0)
 
     def handle_game_ended(self, game_aborted_event: GameEndedEventForObserver):
-        if (not self.reset_turn):
+        if not self.reset_turn:
             self.game_over = True
-            logging.info(f"[ControllerManager] Round Ended!")
-        else:
-            logging.info("[ControllerManager] Game Ended event - Were in a reset turn..")
-            self.reset_turn = False
+            logging.info(f"[ControllerManager] Round Ended! Plz reset properly")
         # exit(0)
 
     def handle_tick(self, tick_event: TickEventForObserver):
