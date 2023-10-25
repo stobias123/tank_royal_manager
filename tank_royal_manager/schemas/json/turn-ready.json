@@ -1,0 +1,9 @@
+{
+  "$id": null,
+  "$schema": "http://json-schema.org/2020-12/schema#",
+  "description": "Broadcast to observers when all bots have sent intent",
+  "type": "object",
+  "extends": {
+    "$ref": "message.json"
+  }
+}
